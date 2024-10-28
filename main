@@ -1,0 +1,63 @@
+import requests
+op2=30
+pelicula=input(': digite el nombre de una pelicula')
+apikey='d4b1b4145bf3b186fbb46d70f0ad0c47'
+url = f"https://api.themoviedb.org/3/search/movie?api_key={apikey}&query={pelicula}"
+response = requests.get(url)
+data=response.json
+while op2!=0:
+    print("1 para saber la puntuacion de la pelicula")
+    print("2 para saber el año en que salio")
+    print("3 para saber los ingresos de la pelicula")
+    print("4 para saber el presupueto de la pelicula")
+    print("0 salir")
+    op2=int(input())
+    if op2==1:
+        if response.status_code == 200:
+            data = response.json()
+            if data['results']:
+                pelicula = data['results'][0]
+                titulo = pelicula['title']
+                puntuacion = pelicula['vote_average']
+                print(f"La puntuación de '{titulo}' es: {puntuacion}")
+    elif op2==2:
+        if response.status_code == 200:
+            datos = response.json()
+            if datos['results']:
+                pelicula = datos['results'][0]
+                fecha_lanzamiento = pelicula.get('release_date', 'Fecha no disponible')
+            
+                print(f"fecha de lanzamiento: {fecha_lanzamiento}")
+    elif op2==3:
+        if response.status_code == 200:
+          data = response.json()
+
+          if data['results']:
+              pelicula = datos['results'][0]
+              titulo = pelicula['title']
+              pelicula_id = pelicula['id']
+              url_detalles = f"https://api.themoviedb.org/3/movie/{pelicula_id}?api_key={apikey}"
+              response_detalles = requests.get(url_detalles)
+                    
+              if response_detalles.status_code == 200:
+                  detalles = response_detalles.json()
+                  ingresos = detalles.get('revenue', 'Ingresos no disponibles')
+                  print(f"Ingresos: ${ingresos:,} USD")
+    elif op2==4:
+      if response.status_code == 200:
+        data = response.json()
+
+        if data['results']:
+          pelicula = data['results'][0]
+          titulo = pelicula['title']
+          pelicula_id = pelicula['id']
+
+          url_detalles = f"https://api.themoviedb.org/3/movie/{pelicula_id}?api_key={apikey}"
+          response_detalles = requests.get(url_detalles)
+                    
+          if response_detalles.status_code == 200:
+              detalles = response_detalles.json()
+              presupuesto = detalles.get('budget', 'Presupuesto no disponible')
+              print(f"Presupuesto: ${presupuesto:,} USD")
+    elif op2 not in [0, 1, 2, 3, 4]:
+        print("Opción no válida, intenta de nuevo.")
